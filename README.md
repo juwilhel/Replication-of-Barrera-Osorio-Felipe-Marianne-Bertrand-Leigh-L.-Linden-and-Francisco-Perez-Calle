@@ -1,6 +1,7 @@
 # Replication of Barrera-Osorio, Felipe, Marianne Bertrand, Leigh L. Linden, and Francisco Perez-Calle (2011)
 
 This repository contains my replication of 
+
 > Barrera-Osorio, Felipe, Marianne Bertrand, Leigh L. Linden, and Francisco Perez-Calle. 2011. "Improving the Design of Conditional Transfer Programs: Evidence from a Randomized Education Experiment in Colombia." American Economic Journal: Applied Economics, 3 (2): 167-95. 
 
 ## Project overview
