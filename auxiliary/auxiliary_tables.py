@@ -33,17 +33,9 @@ def create_table1(data):
     """
       Creates Table 1.
     """
-    data['grade_group'] = 'Grades 6-8'
-    data.loc[data['grade'] > 8, 'grade_group'] = 'Grades 9-10'
-    data.loc[data['grade'] > 10, 'grade_group'] = 'Grade 11'
-    data['group'] = 'Control'
-    data.loc[data['T1_treat'] == 1, 'group'] = 'Basic'
-    data.loc[data['T2_treat'] == 1, 'group'] = 'Savings'
-    data.loc[data['T3_treat'] == 1, 'group'] = 'Tertiary'
-    registrants = data.drop(data[(data.suba == 1) & (data.grade < 9) | (data.bl_observed == 0)].index)
-    table1 = pd.crosstab(registrants.grade_group, [registrants.suba, registrants.group], colnames=['Experiment', 'Group'], margins=True, margins_name="Total")
+    table1 = pd.crosstab(sample.grade_group, [sample.suba, sample.group], colnames=['Experiment', 'Group'], margins=True, margins_name="Total")
     table11 = table1.drop(index = "Total")
-    table12 = pd.crosstab(registrants.r_be_gene, [registrants.suba, registrants.group], margins=True, margins_name="Total")
+    table12 = pd.crosstab(sample.r_be_gene, [sample.suba, sample.group], margins=True, margins_name="Total")
     table1 = table11.append(table12).rename(index={"F": "Female", "M": "Male"}, columns={0.0: "Basic-Savings", 1.0: "Tertiary"})
     
     return table1
