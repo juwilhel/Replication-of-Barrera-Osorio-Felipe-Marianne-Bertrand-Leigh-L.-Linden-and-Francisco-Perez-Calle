@@ -33,9 +33,9 @@ def create_table1(data):
     """
       Creates Table 1.
     """
-    table1 = pd.crosstab(sample.grade_group, [sample.suba, sample.group], colnames=['Experiment', 'Group'], margins=True, margins_name="Total")
+    table1 = pd.crosstab(data.grade_group, [data.suba, data.group], colnames=['Experiment', 'Group'], margins=True, margins_name="Total")
     table11 = table1.drop(index = "Total")
-    table12 = pd.crosstab(sample.r_be_gene, [sample.suba, sample.group], margins=True, margins_name="Total")
+    table12 = pd.crosstab(data.r_be_gene, [data.suba, data.group], margins=True, margins_name="Total")
     table1 = table11.append(table12).rename(index={"F": "Female", "M": "Male"}, columns={0.0: "Basic-Savings", 1.0: "Tertiary"})
     
     return table1
