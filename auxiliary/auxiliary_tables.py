@@ -80,6 +80,101 @@ def create_table2(data1, data2):
     
     return table2
 
+def create_table34(data1, data2, data3, variable):
+    """
+      Creates Table 3 and 4.
+    """
+    result_sancristobal = list()
+    result_sancristobal1 = list()
+    result_sancristobal2 = list()
+    result_sancristobal3 = list()
+    result_suba = list()
+    result_suba1 = list()
+    result_suba2 = list()
+    result_suba3 = list()
+    result_both = list()
+    r2_sancristobal = list()
+    r2_suba = list()
+    y_sancristobal = data1[variable]
+    y_suba = data2[variable]
+    for i in [['T1_treat','T2_treat'],['T1_treat','T2_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age'],['T1_treat','T2_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']]:
+        x_sancristobal = data1[i]
+        x_sancristobal = sm_api.add_constant(x_sancristobal)
+        reg_sancristobal = sm_api.OLS(y_sancristobal, x_sancristobal).fit(cov_type='cluster', cov_kwds={'groups': data1['school_code']})
+        result_sancristobal.append(round(reg_sancristobal.params[1], 3))
+        result_sancristobal.append(round(reg_sancristobal.bse[1], 3))
+        result_sancristobal.append(round(reg_sancristobal.params[2], 3))
+        result_sancristobal.append(round(reg_sancristobal.bse[2], 3))
+        result_sancristobal.append(round(reg_sancristobal.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+        result_sancristobal.append(round(float(reg_sancristobal.f_test('T1_treat=T2_treat').pvalue), 3))
+        r2_sancristobal.append(round(reg_sancristobal.rsquared, 3))
+    result_sancristobal1.append(result_sancristobal[0:6])
+    result_sancristobal2.append(result_sancristobal[6:12])
+    result_sancristobal3.append(result_sancristobal[12:])
+    i = 4
+    while i < 6:
+        result_sancristobal1[0].insert(i, '')
+        result_sancristobal2[0].insert(i, '')
+        result_sancristobal3[0].insert(i, '')
+        result_sancristobal1[0].append('')
+        result_sancristobal2[0].append('')
+        result_sancristobal3[0].append('')
+        i += 1
+    result_sancristobal1[0].append(len(y_sancristobal))
+    result_sancristobal2[0].append(len(y_sancristobal))
+    result_sancristobal3[0].append(len(y_sancristobal))
+    result_sancristobal1[0].append(r2_sancristobal[0])
+    result_sancristobal2[0].append(r2_sancristobal[1])
+    result_sancristobal3[0].append(r2_sancristobal[2])
+    for i in [['T3_treat'],['T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age'],['T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']]:
+        x_suba = data2[i]
+        x_suba = sm_api.add_constant(x_suba, has_constant='add')
+        reg_suba = sm_api.OLS(y_suba, x_suba).fit(cov_type='cluster', cov_kwds={'groups': data2['school_code']})
+        result_suba.append(round(reg_suba.params[1], 3))
+        result_suba.append(round(reg_suba.bse[1], 3))
+        r2_suba.append(round(reg_suba.rsquared, 3))
+    result_suba1.append(result_suba[0:2])
+    result_suba2.append(result_suba[2:4])
+    result_suba3.append(result_suba[4:])
+    i = 1
+    while i < 5:
+        result_suba1[0].insert(0, '')
+        result_suba2[0].insert(0, '')
+        result_suba3[0].insert(0, '')
+        result_suba1[0].append('')
+        result_suba2[0].append('')
+        result_suba3[0].append('')
+        i += 1
+    result_suba1[0].append(len(y_suba))
+    result_suba2[0].append(len(y_suba))
+    result_suba3[0].append(len(y_suba))
+    result_suba1[0].append(r2_suba[0])
+    result_suba2[0].append(r2_suba[1])
+    result_suba3[0].append(r2_suba[2])
+    y_both = data3['at_msamean']
+    x_both = data3[['T1_treat','T2_treat','T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']]
+    x_both = sm_api.add_constant(x_both, has_constant='add')
+    reg_both = sm_api.OLS(y_both, x_both).fit(cov_type='cluster', cov_kwds={'groups': data3['school_code']})
+    i = 1
+    while i < 4:
+        result_both.append(round(reg_both.params[i], 3))
+        result_both.append(round(reg_both.bse[i], 3))
+        i += 1
+    result_both.append(round(reg_both.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    result_both.append(round(float(reg_both.f_test('T1_treat=T2_treat').pvalue), 3))
+    result_both.append(round(reg_both.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
+    result_both.append(round(float(reg_both.f_test('T1_treat=T3_treat').pvalue), 3))
+    result_both.append(len(y_both))
+    result_both.append(round(reg_both.rsquared, 3))
+    table3 = pd.DataFrame({'Basic-Savings': result_sancristobal1[0]}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
+    table3['Basic-Savings with demographics'] = result_sancristobal2[0]
+    table3['Basic-Savings with demographics and school fixed effects'] = result_sancristobal3[0]
+    table3['Tertiary'] = result_suba1[0]
+    table3['Tertiary with demographics'] = result_suba2[0]
+    table3['Tertiary with demographics and school fixed effects'] = result_suba3[0]
+    table3['Both'] = result_both
+    
+    return table3
 
 def create_table6(dictionary, keys, regressors):
     """
