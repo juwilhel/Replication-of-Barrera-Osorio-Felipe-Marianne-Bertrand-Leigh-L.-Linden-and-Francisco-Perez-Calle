@@ -95,19 +95,30 @@ def create_table34(data1, data2, data3, variable):
     result_both = list()
     r2_sancristobal = list()
     r2_suba = list()
-    y_sancristobal = data1[variable]
     y_suba = data2[variable]
-    for i in [['T1_treat','T2_treat'],['T1_treat','T2_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age'],['T1_treat','T2_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']]:
-        x_sancristobal = data1[i]
-        x_sancristobal = sm_api.add_constant(x_sancristobal)
-        reg_sancristobal = sm_api.OLS(y_sancristobal, x_sancristobal).fit(cov_type='cluster', cov_kwds={'groups': data1['school_code']})
-        result_sancristobal.append(round(reg_sancristobal.params[1], 3))
-        result_sancristobal.append(round(reg_sancristobal.bse[1], 3))
-        result_sancristobal.append(round(reg_sancristobal.params[2], 3))
-        result_sancristobal.append(round(reg_sancristobal.bse[2], 3))
-        result_sancristobal.append(round(reg_sancristobal.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-        result_sancristobal.append(round(float(reg_sancristobal.f_test('T1_treat=T2_treat').pvalue), 3))
-        r2_sancristobal.append(round(reg_sancristobal.rsquared, 3))
+    y_sancristobal = data1[variable]
+    for i in [['T1_treat','T2_treat'],['T1_treat','T2_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]:
+            x_sancristobal = data1[i]
+            x_sancristobal = sm_api.add_constant(x_sancristobal)
+            reg_sancristobal = sm_api.OLS(y_sancristobal, x_sancristobal).fit(cov_type='cluster', cov_kwds={'groups': data1['school_code']})
+            result_sancristobal.append(round(reg_sancristobal.params[1], 3))
+            result_sancristobal.append(round(reg_sancristobal.bse[1], 3))
+            result_sancristobal.append(round(reg_sancristobal.params[2], 3))
+            result_sancristobal.append(round(reg_sancristobal.bse[2], 3))
+            result_sancristobal.append(round(reg_sancristobal.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+            result_sancristobal.append(round(float(reg_sancristobal.f_test('T1_treat=T2_treat').pvalue), 3))
+            r2_sancristobal.append(round(reg_sancristobal.rsquared, 3))
+    x_sancristobal = data1[['T1_treat','T2_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x_sancristobal = sm_api.add_constant(x_sancristobal)
+    x_sancristobal = x_sancristobal.join(pd.get_dummies(data1['school_code']))
+    reg_sancristobal = sm_api.OLS(y_sancristobal, x_sancristobal).fit(cov_type='cluster', cov_kwds={'groups': data1['school_code']})
+    result_sancristobal.append(round(reg_sancristobal.params[1], 3))
+    result_sancristobal.append(round(reg_sancristobal.bse[1], 3))
+    result_sancristobal.append(round(reg_sancristobal.params[2], 3))
+    result_sancristobal.append(round(reg_sancristobal.bse[2], 3))
+    result_sancristobal.append('')#round(reg_sancristobal.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    result_sancristobal.append('')#round(float(reg_sancristobal.f_test('T1_treat=T2_treat').pvalue), 3))
+    r2_sancristobal.append(round(reg_sancristobal.rsquared, 3))
     result_sancristobal1.append(result_sancristobal[0:6])
     result_sancristobal2.append(result_sancristobal[6:12])
     result_sancristobal3.append(result_sancristobal[12:])
@@ -126,13 +137,20 @@ def create_table34(data1, data2, data3, variable):
     result_sancristobal1[0].append(r2_sancristobal[0])
     result_sancristobal2[0].append(r2_sancristobal[1])
     result_sancristobal3[0].append(r2_sancristobal[2])
-    for i in [['T3_treat'],['T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age'],['T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']]:
+    for i in [['T3_treat'],['T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]:
         x_suba = data2[i]
         x_suba = sm_api.add_constant(x_suba, has_constant='add')
         reg_suba = sm_api.OLS(y_suba, x_suba).fit(cov_type='cluster', cov_kwds={'groups': data2['school_code']})
         result_suba.append(round(reg_suba.params[1], 3))
         result_suba.append(round(reg_suba.bse[1], 3))
         r2_suba.append(round(reg_suba.rsquared, 3))
+    x_suba = data2[['T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x_suba = sm_api.add_constant(x_suba, has_constant='add')
+    x_suba = x_suba.join(pd.get_dummies(data2['school_code']))
+    reg_suba = sm_api.OLS(y_suba, x_suba).fit(cov_type='cluster', cov_kwds={'groups': data2['school_code']})
+    result_suba.append(round(reg_suba.params[1], 3))
+    result_suba.append(round(reg_suba.bse[1], 3))
+    r2_suba.append(round(reg_suba.rsquared, 3))
     result_suba1.append(result_suba[0:2])
     result_suba2.append(result_suba[2:4])
     result_suba3.append(result_suba[4:])
@@ -152,18 +170,19 @@ def create_table34(data1, data2, data3, variable):
     result_suba2[0].append(r2_suba[1])
     result_suba3[0].append(r2_suba[2])
     y_both = data3[variable]
-    x_both = data3[['T1_treat','T2_treat','T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']]
+    x_both = data3[['T1_treat','T2_treat','T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
     x_both = sm_api.add_constant(x_both, has_constant='add')
+    x_both = x_both.join(pd.get_dummies(data3['school_code']))
     reg_both = sm_api.OLS(y_both, x_both).fit(cov_type='cluster', cov_kwds={'groups': data3['school_code']})
     i = 1
     while i < 4:
         result_both.append(round(reg_both.params[i], 3))
         result_both.append(round(reg_both.bse[i], 3))
         i += 1
-    result_both.append(round(reg_both.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_both.append(round(float(reg_both.f_test('T1_treat=T2_treat').pvalue), 3))
-    result_both.append(round(reg_both.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
-    result_both.append(round(float(reg_both.f_test('T1_treat=T3_treat').pvalue), 3))
+    result_both.append('')#round(reg_both.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    result_both.append('')#round(float(reg_both.f_test('T1_treat=T2_treat').pvalue), 3))
+    result_both.append('')#round(reg_both.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
+    result_both.append('')#round(float(reg_both.f_test('T1_treat=T3_treat').pvalue), 3))
     result_both.append(len(y_both))
     result_both.append(round(reg_both.rsquared, 3))
     table3 = pd.DataFrame({'Basic-Savings': result_sancristobal1[0]}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
@@ -173,6 +192,7 @@ def create_table34(data1, data2, data3, variable):
     table3['Tertiary with demographics'] = result_suba2[0]
     table3['Tertiary with demographics and school fixed effects'] = result_suba3[0]
     table3['Both'] = result_both
+    table3
     
     return table3
 
@@ -191,19 +211,20 @@ def create_table5(data):
         result_grad_suba.append('')
         result_tert_suba.append('')
         i += 1
-    x = sm_api.add_constant(sample_fu_sancristobal[['T1_treat','T2_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']], has_constant='add')
+    x = sm_api.add_constant(sample_fu_sancristobal[['T1_treat','T2_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
+    x = x.join(pd.get_dummies(sample_fu_sancristobal['school_code']))
     y = sample_fu_sancristobal['graduated']
     reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_fu_sancristobal['school_code']})
-    result_grad_sancristobal.append(round(reg.params[1], 3))
-    result_grad_sancristobal.append(round(reg.bse[1], 3))
-    result_grad_sancristobal.append(round(reg.params[2], 3))
-    result_grad_sancristobal.append(round(reg.bse[2], 3))
+    result_grad_sancristobal.append(round(reg.params[[1]][0], 3))
+    result_grad_sancristobal.append(round(reg.bse[[1]][0], 3))
+    result_grad_sancristobal.append(round(reg.params[[2]][0], 3))
+    result_grad_sancristobal.append(round(reg.bse[[2]][0], 3))
     i = 1
     while i < 3:
         result_grad_sancristobal.append('')
         i += 1
-    result_grad_sancristobal.append(round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_grad_sancristobal.append(round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    result_grad_sancristobal.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    result_grad_sancristobal.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
     i = 1
     while i < 3:
         result_grad_sancristobal.append('')
@@ -211,30 +232,32 @@ def create_table5(data):
     result_grad_sancristobal.append(len(y))
     result_grad_sancristobal.append(round(reg.rsquared, 3))
     sample_fu_sancristobal_tert = sample_fu_sancristobal.drop(sample_fu_sancristobal[sample_fu_sancristobal.tertiary.isnull()].index)
-    x = sm_api.add_constant(sample_fu_sancristobal_tert[['T1_treat','T2_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']], has_constant='add')
+    x = sm_api.add_constant(sample_fu_sancristobal_tert[['T1_treat','T2_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
+    x = x.join(pd.get_dummies(sample_fu_sancristobal_tert['school_code']))
     y = sample_fu_sancristobal_tert['tertiary']
     reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_fu_sancristobal_tert['school_code']})
-    result_tert_sancristobal.append(round(reg.params[1], 3))
-    result_tert_sancristobal.append(round(reg.bse[1], 3))
-    result_tert_sancristobal.append(round(reg.params[2], 3))
-    result_tert_sancristobal.append(round(reg.bse[2], 3))
+    result_tert_sancristobal.append(round(reg.params[[1]][0], 3))
+    result_tert_sancristobal.append(round(reg.bse[[1]][0], 3))
+    result_tert_sancristobal.append(round(reg.params[[2]][0], 3))
+    result_tert_sancristobal.append(round(reg.bse[[2]][0], 3))
     i = 1
     while i < 3:
         result_tert_sancristobal.append('')
         i += 1
-    result_tert_sancristobal.append(round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_tert_sancristobal.append(round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    result_tert_sancristobal.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    result_tert_sancristobal.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
     i = 1
     while i < 3:
         result_tert_sancristobal.append('')
         i += 1
     result_tert_sancristobal.append(len(y))
     result_tert_sancristobal.append(round(reg.rsquared, 3))
-    x = sm_api.add_constant(sample_fu_suba[['T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']], has_constant='add')
+    x = sm_api.add_constant(sample_fu_suba[['T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
+    x = x.join(pd.get_dummies(sample_fu_suba['school_code']))
     y = sample_fu_suba['graduated']
     reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_fu_suba['school_code']})
-    result_grad_suba.append(round(reg.params[1], 3))
-    result_grad_suba.append(round(reg.bse[1], 3))
+    result_grad_suba.append(round(reg.params[[1]][0], 3))
+    result_grad_suba.append(round(reg.bse[[1]][0], 3))
     i = 1
     while i < 5:
         result_grad_suba.append('')
@@ -242,46 +265,49 @@ def create_table5(data):
     result_grad_suba.append(len(y))
     result_grad_suba.append(round(reg.rsquared, 3))
     sample_fu_suba_tert = sample_fu_suba.drop(sample_fu_suba[sample_fu_suba.tertiary.isnull()].index)
-    x = sm_api.add_constant(sample_fu_suba_tert[['T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']], has_constant='add')
+    x = sm_api.add_constant(sample_fu_suba_tert[['T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
+    x = x.join(pd.get_dummies(sample_fu_suba_tert['school_code']))
     y = sample_fu_suba_tert['tertiary']
     reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_fu_suba_tert['school_code']})
-    result_tert_suba.append(round(reg.params[1], 3))
-    result_tert_suba.append(round(reg.bse[1], 3))
+    result_tert_suba.append(round(reg.params[[1]][0], 3))
+    result_tert_suba.append(round(reg.bse[[1]][0], 3))
     i = 1
     while i < 5:
         result_tert_suba.append('')
         i += 1
     result_tert_suba.append(len(y))
     result_tert_suba.append(round(reg.rsquared, 3))
-    x = sm_api.add_constant(sample_fu[['T1_treat','T2_treat','T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']], has_constant='add')
+    x = sm_api.add_constant(sample_fu[['T1_treat','T2_treat','T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
+    x = x.join(pd.get_dummies(sample_fu['school_code']))
     y = sample_fu['graduated']
     reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_fu['school_code']})
-    result_grad_both.append(round(reg.params[1], 3))
-    result_grad_both.append(round(reg.bse[1], 3))
-    result_grad_both.append(round(reg.params[2], 3))
-    result_grad_both.append(round(reg.bse[2], 3))
-    result_grad_both.append(round(reg.params[3], 3))
-    result_grad_both.append(round(reg.bse[3], 3))
-    result_grad_both.append(round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_grad_both.append(round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
-    result_grad_both.append(round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
-    result_grad_both.append(round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
+    result_grad_both.append(round(reg.params[[1]][0], 3))
+    result_grad_both.append(round(reg.bse[[1]][0], 3))
+    result_grad_both.append(round(reg.params[[2]][0], 3))
+    result_grad_both.append(round(reg.bse[[2]][0], 3))
+    result_grad_both.append(round(reg.params[[3]][0], 3))
+    result_grad_both.append(round(reg.bse[[3]][0], 3))
+    result_grad_both.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    result_grad_both.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    result_grad_both.append('')#round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
+    result_grad_both.append('')#round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
     result_grad_both.append(len(y))
     result_grad_both.append(round(reg.rsquared, 3))
     sample_fu_tert = sample_fu.drop(sample_fu[sample_fu.tertiary.isnull()].index)
-    x = sm_api.add_constant(sample_fu_tert[['T1_treat','T2_treat','T3_treat','s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','s_estcivil_int','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal','grade','suba','s_over_age','school_code']], has_constant='add')
+    x = sm_api.add_constant(sample_fu_tert[['T1_treat','T2_treat','T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
+    x = x.join(pd.get_dummies(sample_fu_tert['school_code']))
     y = sample_fu_tert['tertiary']
     reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_fu_tert['school_code']})
-    result_tert_both.append(round(reg.params[1], 3))
-    result_tert_both.append(round(reg.bse[1], 3))
-    result_tert_both.append(round(reg.params[2], 3))
-    result_tert_both.append(round(reg.bse[2], 3))
-    result_tert_both.append(round(reg.params[3], 3))
-    result_tert_both.append(round(reg.bse[3], 3))
-    result_tert_both.append(round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_tert_both.append(round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
-    result_tert_both.append(round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
-    result_tert_both.append(round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
+    result_tert_both.append(round(reg.params[[1]][0], 3))
+    result_tert_both.append(round(reg.bse[[1]][0], 3))
+    result_tert_both.append(round(reg.params[[2]][0], 3))
+    result_tert_both.append(round(reg.bse[[2]][0], 3))
+    result_tert_both.append(round(reg.params[[3]][0], 3))
+    result_tert_both.append(round(reg.bse[[3]][0], 3))
+    result_tert_both.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    result_tert_both.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    result_tert_both.append('')#round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
+    result_tert_both.append('')#round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
     result_tert_both.append(len(y))
     result_tert_both.append(round(reg.rsquared, 3))
     table5 = pd.DataFrame({'Graduation Basic-Savings':result_grad_sancristobal}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
