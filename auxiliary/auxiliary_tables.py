@@ -38,8 +38,28 @@ def create_table1(data):
     table11 = table1.drop(index = "Total")
     table12 = pd.crosstab(data.r_be_gene, [data.suba, data.group], margins=True, margins_name="Total")
     table1 = table11.append(table12).rename(index={"F": "Female", "M": "Male"}, columns={0.0: "Basic-Savings", 1.0: "Tertiary"})
+    table1 = table1[[('Basic-Savings','Control'),('Basic-Savings','Basic'),('Basic-Savings','Savings'),('Tertiary','Control'),('Tertiary','Tertiary'),('Total', '')]]
+    table1 = table1.reindex(['Grades 6-8','Grades 9-10','Grade 11','Female','Male','Total'])
     
     return table1
+
+def style_specific_cell(x):
+    """
+      Creates Colors for Table 2
+    """
+    color1 = 'background-color: lightgreen'
+    color2 = 'background-color: lightcoral'
+    color3 = 'background-color: skyblue'
+    df1 = pd.DataFrame('', index=x.index, columns=x.columns)
+    df1.iloc[0, 1] = color1
+    df1.iloc[18, 2] = color1
+    df1.iloc[2, 2] = color2
+    df1.iloc[2, 3] = color2
+    df1.iloc[6, 3] = color2
+    df1.iloc[14, 1] = color3
+    df1.iloc[24, 3] = color3
+    
+    return df1
 
 def create_table2(data1, data2):
     """
@@ -77,6 +97,7 @@ def create_table2(data1, data2):
     table22.columns = ['Control average T', 'Tertiary-Control']
     table22['Control average T'] = Control_avg_t
     table2 = table21.join(table22)
+    table2 = table2.style.apply(style_specific_cell, axis=None)
     
     return table2
 
