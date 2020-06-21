@@ -112,10 +112,10 @@ def create_table34(data1, data2, data3, variable):
     x_sancristobal = sm_api.add_constant(x_sancristobal)
     x_sancristobal = x_sancristobal.join(pd.get_dummies(data1['school_code']))
     reg_sancristobal = sm_api.OLS(y_sancristobal, x_sancristobal).fit(cov_type='cluster', cov_kwds={'groups': data1['school_code']})
-    result_sancristobal.append(round(reg_sancristobal.params[1], 3))
-    result_sancristobal.append(round(reg_sancristobal.bse[1], 3))
-    result_sancristobal.append(round(reg_sancristobal.params[2], 3))
-    result_sancristobal.append(round(reg_sancristobal.bse[2], 3))
+    result_sancristobal.append(round(reg_sancristobal.params[[1]][0], 3))
+    result_sancristobal.append(round(reg_sancristobal.bse[[1]][0], 3))
+    result_sancristobal.append(round(reg_sancristobal.params[[2]][0], 3))
+    result_sancristobal.append(round(reg_sancristobal.bse[[2]][0], 3))
     result_sancristobal.append('')#round(reg_sancristobal.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
     result_sancristobal.append('')#round(float(reg_sancristobal.f_test('T1_treat=T2_treat').pvalue), 3))
     r2_sancristobal.append(round(reg_sancristobal.rsquared, 3))
@@ -148,8 +148,8 @@ def create_table34(data1, data2, data3, variable):
     x_suba = sm_api.add_constant(x_suba, has_constant='add')
     x_suba = x_suba.join(pd.get_dummies(data2['school_code']))
     reg_suba = sm_api.OLS(y_suba, x_suba).fit(cov_type='cluster', cov_kwds={'groups': data2['school_code']})
-    result_suba.append(round(reg_suba.params[1], 3))
-    result_suba.append(round(reg_suba.bse[1], 3))
+    result_suba.append(round(reg_suba.params[[1]][0], 3))
+    result_suba.append(round(reg_suba.bse[[1]][0], 3))
     r2_suba.append(round(reg_suba.rsquared, 3))
     result_suba1.append(result_suba[0:2])
     result_suba2.append(result_suba[2:4])
@@ -176,8 +176,8 @@ def create_table34(data1, data2, data3, variable):
     reg_both = sm_api.OLS(y_both, x_both).fit(cov_type='cluster', cov_kwds={'groups': data3['school_code']})
     i = 1
     while i < 4:
-        result_both.append(round(reg_both.params[i], 3))
-        result_both.append(round(reg_both.bse[i], 3))
+        result_both.append(round(reg_both.params[[i]][0], 3))
+        result_both.append(round(reg_both.bse[[i]][0], 3))
         i += 1
     result_both.append('')#round(reg_both.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
     result_both.append('')#round(float(reg_both.f_test('T1_treat=T2_treat').pvalue), 3))
@@ -319,31 +319,105 @@ def create_table5(data):
     
     return table5
 
-def create_table6(dictionary, keys, regressors):
+def create_table6(data):
     """
       Creates Table 6.
     """
-    table6 = pd.concat([estimate_RDD_multiple_datasets(dictionary=dictionary,
-                                                       keys=keys,
-                                                       outcome='gradin4',
-                                                       regressors=regressors),
-                        estimate_RDD_multiple_datasets(dictionary=dictionary,
-                                                       keys=keys,
-                                                       outcome='gradin5',
-                                                       regressors=regressors),
-                        estimate_RDD_multiple_datasets(dictionary=dictionary,
-                                                       keys=keys,
-                                                       outcome='gradin6',
-                                                       regressors=regressors),
-                        ], axis=1
-                       )
-    table6.columns = pd.MultiIndex.from_product([['Graduated after 4 years',
-                                                  'Graduated after 5 years',
-                                                  'Graduated after 6 years'],
-                                                 ['GPA below cutoff (1)', 'P-Value (1)', 'Std.err (1)',
-                                                  'Intercept (0)', 'P-Value (0)', 'Std.err (0)',
-                                                  'Observations']
-                                                 ])
+    att = list()
+    enr = list()
+    att_f = list()
+    enr_f = list()
+    att_m = list()
+    enr_m = list()
+    sample = data
+    sample['s_sexo_int'] = sample['s_sexo'].cat.codes
+    sample = sample.join(pd.get_dummies(sample['school_code']))
+    sample = sample.join(pd.get_dummies(sample['s_teneviv']))
+    sample = sample.join(pd.get_dummies(sample['s_estcivil']))
+    sample = sample.join(pd.get_dummies(sample['grade'], prefix='grade'))
+    sample = sample.join(pd.get_dummies(sample['s_estrato'],  prefix='estrato'))
+    sample = sample.drop(sample[(sample.fu_observed == 0) | (sample.grade == 11)].index)
+    sample['num_rsib'] = sample.groupby('fu_nim_hogar')['fu_nim_hogar'].transform('count')
+    sample = sample.drop(sample[sample.num_rsib !=2].index)
+    first_sib = sample.groupby('fu_nim_hogar').first()
+    second_sib = sample.groupby('fu_nim_hogar').last()
+    second_sib_add = second_sib['treatment']
+    first_sib_add = first_sib['treatment']
+    first_sib = first_sib.merge(second_sib_add, on='fu_nim_hogar')
+    first_sib['tsib'] = first_sib['treatment_y']
+    second_sib = second_sib.merge(first_sib_add, on='fu_nim_hogar')
+    second_sib['tsib'] = second_sib['treatment_y']
+    sample_sib = first_sib.append(second_sib)
+    sample_sib.index = range(1, 2463)
+    sample_sib = sample_sib.drop(sample_sib[(sample_sib.suba == 1) & (sample_sib.grade < 9)].index)
+    sample_sib_untreated = sample_sib.drop(sample_sib[sample_sib.control == 0].index)
+    sample_sib_untreated_f = sample_sib.drop(sample_sib[(sample_sib.control == 0) | (sample_sib.s_sexo != 0)].index)
+    sample_sib_untreated_m = sample_sib.drop(sample_sib[(sample_sib.control == 0) | (sample_sib.s_sexo == 0)].index)
+    y = sample_sib_untreated['at_msamean']
+    x = sample_sib_untreated[['tsib','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x = sm_api.add_constant(x, has_constant='add')
+    x = x.join(pd.get_dummies(sample_sib_untreated['school_code']))
+    reg1 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated['school_code']})
+    att.append(round(reg1.params[[1]][0], 3))
+    att.append(round(reg1.bse[[1]][0], 3))
+    att.append(int(reg1.nobs))
+    att.append(round(reg1.rsquared, 3))
+    sample_sib_untreated = sample_sib_untreated.drop(sample_sib_untreated[sample_sib_untreated.m_enrolled.isna()].index)
+    y = sample_sib_untreated['m_enrolled']
+    x = sample_sib_untreated[['tsib','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x = sm_api.add_constant(x, has_constant='add')
+    x = x.join(pd.get_dummies(sample_sib_untreated['school_code']))
+    reg2 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated['school_code']})
+    enr.append(round(reg2.params[[1]][0], 3))
+    enr.append(round(reg2.bse[[1]][0], 3))
+    enr.append(int(reg2.nobs))
+    enr.append(round(reg2.rsquared, 3))
+    y = sample_sib_untreated_f['at_msamean']
+    x = sample_sib_untreated_f[['tsib','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x = sm_api.add_constant(x, has_constant='add')
+    x = x.join(pd.get_dummies(sample_sib_untreated_f['school_code']))
+    reg3 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_f['school_code']})
+    att_f.append(round(reg3.params[[1]][0], 3))
+    att_f.append(round(reg3.bse[[1]][0], 3))
+    att_f.append(int(reg3.nobs))
+    att_f.append(round(reg3.rsquared, 3))
+    sample_sib_untreated_f = sample_sib_untreated_f.drop(sample_sib_untreated_f[sample_sib_untreated_f.m_enrolled.isna()].index)
+    y = sample_sib_untreated_f['m_enrolled']
+    x = sample_sib_untreated_f[['tsib','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x = sm_api.add_constant(x, has_constant='add')
+    x = x.join(pd.get_dummies(sample_sib_untreated_f['school_code']))
+    reg4 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_f['school_code']})
+    enr_f.append(round(reg4.params[[1]][0], 3))
+    enr_f.append(round(reg4.bse[[1]][0], 3))
+    enr_f.append(int(reg4.nobs))
+    enr_f.append(round(reg4.rsquared, 3))
+    y = sample_sib_untreated_m['at_msamean']
+    x = sample_sib_untreated_m[['tsib','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x = sm_api.add_constant(x, has_constant='add')
+    x = x.join(pd.get_dummies(sample_sib_untreated_m['school_code']))
+    reg5 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_m['school_code']})
+    att_m.append(round(reg5.params[[1]][0], 3))
+    att_m.append(round(reg5.bse[[1]][0], 3))
+    att_m.append(int(reg5.nobs))
+    att_m.append(round(reg5.rsquared, 3))
+    sample_sib_untreated_m = sample_sib_untreated_m.drop(sample_sib_untreated_m[sample_sib_untreated_m.m_enrolled.isna()].index)
+    y = sample_sib_untreated_m['m_enrolled']
+    x = sample_sib_untreated_m[['tsib','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']]
+    x = sm_api.add_constant(x, has_constant='add')
+    x = x.join(pd.get_dummies(sample_sib_untreated_m['school_code']))
+    reg6 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_m['school_code']})
+    enr_m.append(round(reg6.params[[1]][0], 3))
+    enr_m.append(round(reg6.bse[[1]][0], 3))
+    enr_m.append(int(reg6.nobs))
+    enr_m.append(round(reg6.rsquared, 3))
+    table6 = pd.DataFrame({'Attendence': att}, index=['Sibling is treated?','Sibling is treated? SE','Observations','R squared'])
+    table6['Enrollment'] = enr
+    table6['Attendence Female'] = att_f
+    table6['Enrollment Female'] = enr_f
+    table6['Attendence Male'] = att_m
+    table6['Enrollment Male'] = enr_m
+    table6
+    
     return table6
 
 
