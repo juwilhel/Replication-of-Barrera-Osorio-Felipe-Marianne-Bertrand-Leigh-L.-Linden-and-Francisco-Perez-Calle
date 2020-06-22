@@ -137,8 +137,11 @@ def create_table34(data1, data2, data3, variable):
     result_sancristobal.append(round(reg_sancristobal.bse[[1]][0], 3))
     result_sancristobal.append(round(reg_sancristobal.params[[2]][0], 3))
     result_sancristobal.append(round(reg_sancristobal.bse[[2]][0], 3))
-    result_sancristobal.append('')#round(reg_sancristobal.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_sancristobal.append('')#round(float(reg_sancristobal.f_test('T1_treat=T2_treat').pvalue), 3))
+    A = np.zeros((len(x_sancristobal.columns),), dtype=int)
+    A[1] = 1
+    A[2] = -1
+    result_sancristobal.append(round(reg_sancristobal.f_test(A).fvalue[0][0], 3))
+    result_sancristobal.append(round(float(reg_sancristobal.f_test(A).pvalue), 3))
     r2_sancristobal.append(round(reg_sancristobal.rsquared, 3))
     result_sancristobal1.append(result_sancristobal[0:6])
     result_sancristobal2.append(result_sancristobal[6:12])
@@ -200,10 +203,16 @@ def create_table34(data1, data2, data3, variable):
         result_both.append(round(reg_both.params[[i]][0], 3))
         result_both.append(round(reg_both.bse[[i]][0], 3))
         i += 1
-    result_both.append('')#round(reg_both.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_both.append('')#round(float(reg_both.f_test('T1_treat=T2_treat').pvalue), 3))
-    result_both.append('')#round(reg_both.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
-    result_both.append('')#round(float(reg_both.f_test('T1_treat=T3_treat').pvalue), 3))
+    A = np.zeros((len(x_both.columns),), dtype=int)
+    A[1] = 1
+    A[2] = -1
+    result_both.append(round(reg_both.f_test(A).fvalue[0][0], 3))
+    result_both.append(round(float(reg_both.f_test(A).pvalue), 3))
+    A = np.zeros((len(x_both.columns),), dtype=int)
+    A[1] = 1
+    A[3] = -1
+    result_both.append(round(reg_both.f_test(A).fvalue[0][0], 3))
+    result_both.append(round(float(reg_both.f_test(A).pvalue), 3))
     result_both.append(len(y_both))
     result_both.append(round(reg_both.rsquared, 3))
     table3 = pd.DataFrame({'Basic-Savings': result_sancristobal1[0]}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
@@ -244,8 +253,9 @@ def create_table5(data):
     while i < 3:
         result_grad_sancristobal.append('')
         i += 1
-    result_grad_sancristobal.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_grad_sancristobal.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    A = np.array(([0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+    result_grad_sancristobal.append(round(reg.f_test(A).fvalue[0][0], 3))
+    result_grad_sancristobal.append(round(float(reg.f_test(A).pvalue), 3))
     i = 1
     while i < 3:
         result_grad_sancristobal.append('')
@@ -265,8 +275,9 @@ def create_table5(data):
     while i < 3:
         result_tert_sancristobal.append('')
         i += 1
-    result_tert_sancristobal.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_tert_sancristobal.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    A = np.array(([0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+    result_tert_sancristobal.append(round(reg.f_test(A).fvalue[0][0], 3))
+    result_tert_sancristobal.append(round(float(reg.f_test(A).pvalue), 3))
     i = 1
     while i < 3:
         result_tert_sancristobal.append('')
@@ -308,10 +319,12 @@ def create_table5(data):
     result_grad_both.append(round(reg.bse[[2]][0], 3))
     result_grad_both.append(round(reg.params[[3]][0], 3))
     result_grad_both.append(round(reg.bse[[3]][0], 3))
-    result_grad_both.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_grad_both.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
-    result_grad_both.append('')#round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
-    result_grad_both.append('')#round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
+    A = np.array(([0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+    result_grad_both.append(round(reg.f_test(A).fvalue[0][0], 3))
+    result_grad_both.append(round(float(reg.f_test(A).pvalue), 3))
+    A = np.array(([0,1,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+    result_grad_both.append(round(reg.f_test(A).fvalue[0][0], 3))
+    result_grad_both.append(round(float(reg.f_test(A).pvalue), 3))
     result_grad_both.append(len(y))
     result_grad_both.append(round(reg.rsquared, 3))
     sample_fu_tert = sample_fu.drop(sample_fu[sample_fu.tertiary.isnull()].index)
@@ -325,10 +338,12 @@ def create_table5(data):
     result_tert_both.append(round(reg.bse[[2]][0], 3))
     result_tert_both.append(round(reg.params[[3]][0], 3))
     result_tert_both.append(round(reg.bse[[3]][0], 3))
-    result_tert_both.append('')#round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
-    result_tert_both.append('')#round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
-    result_tert_both.append('')#round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
-    result_tert_both.append('')#round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
+    A = np.array(([0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+    result_tert_both.append(round(reg.f_test(A).fvalue[0][0], 3))
+    result_tert_both.append(round(float(reg.f_test(A).pvalue), 3))
+    A = np.array(([0,1,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+    result_tert_both.append(round(reg.f_test(A).fvalue[0][0], 3))
+    result_tert_both.append(round(float(reg.f_test(A).pvalue), 3))
     result_tert_both.append(len(y))
     result_tert_both.append(round(reg.rsquared, 3))
     table5 = pd.DataFrame({'Graduation Basic-Savings':result_grad_sancristobal}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
