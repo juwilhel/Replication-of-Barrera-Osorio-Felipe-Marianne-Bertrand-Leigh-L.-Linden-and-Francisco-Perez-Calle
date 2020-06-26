@@ -97,7 +97,7 @@ def create_table2(data1, data2):
     table22.columns = ['Control average T', 'Tertiary-Control']
     table22['Control average T'] = Control_avg_t
     table2 = table21.join(table22)
-    table2 = table2.style.apply(style_specific_cell, axis=None)
+    #table2 = table2.style.apply(style_specific_cell, axis=None)
     
     return table2
 
@@ -213,7 +213,7 @@ def create_table34(data1, data2, data3, variable):
     A[3] = -1
     result_both.append(round(reg_both.f_test(A).fvalue[0][0], 3))
     result_both.append(round(float(reg_both.f_test(A).pvalue), 3))
-    result_both.append(len(y_both))
+    result_both.append(int(len(y_both)))
     result_both.append(round(reg_both.rsquared, 3))
     table3 = pd.DataFrame({'Basic-Savings': result_sancristobal1[0]}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
     table3['Basic-Savings with demographics'] = result_sancristobal2[0]
