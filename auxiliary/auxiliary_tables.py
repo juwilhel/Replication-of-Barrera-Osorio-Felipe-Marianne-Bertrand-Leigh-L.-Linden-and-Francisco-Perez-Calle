@@ -8,26 +8,8 @@ import numpy as np
 import statsmodels as sm
 import statsmodels.api as sm_api
 
-from auxiliary.example_project_auxiliary_predictions import *
-from auxiliary.example_project_auxiliary_plots import *
-from auxiliary.example_project_auxiliary_tables import *
 
-
-def color_pvalues(value):
-    """
-    Color pvalues in output tables.
-    """
-
-    if value < 0.01:
-        color = "darkorange"
-    elif value < 0.05:
-        color = "red"
-    elif value < 0.1:
-        color = "magenta"
-    else:
-        color = "black"
-
-    return "color: %s" % color
+from auxiliary.auxiliary_tables import *
 
 
 def create_table1(data):
@@ -456,35 +438,81 @@ def create_table6(data):
     
     return table6
 
-
-def describe_covariates_at_cutoff(data, bandwidth):
+def create_table7(data):
     """
-      Summary table used for validity checks. 
+      Creates Table 7.
     """
-    variables = ['hsgrade_pct', 'totcredits_year1', 'age_at_entry', 'male', 'english', 
-                 'bpl_north_america','loc_campus1', 'loc_campus2', 'loc_campus3']
-
-    treat = pd.DataFrame()
-    untreat = pd.DataFrame()
-
-    sample = data[abs(data['dist_from_cut']) < bandwidth]
-    sample_treat = sample[sample['dist_from_cut'] < 0]
-    sample_untreat = sample[sample['dist_from_cut'] >= 0]
-
-    # treated sample.
-    treat['Mean'] = sample_treat[variables].mean()
-    treat['Std.'] = sample_treat[variables].std()
-    # untreated sample.
-    untreat['Mean'] = sample_untreat[variables].mean()
-    untreat['Std.'] = sample_untreat[variables].std()
-
-    table = pd.concat([treat, untreat], axis=1)
-    table.columns = pd.MultiIndex.from_product([['Below cutoff', 'Above cutoff'],
-                                                ['Mean', 'Std.']])
-    table = table.astype(float).round(2)
-
-    table['Description'] = ["High School Grade Percentile", "Credits attempted first year", 
-                            "Age at entry", "Male", "English is first language", 
-                            "Born in North America", "At Campus 1", "At Campus 2", "At Campus 3"]
-
+    x = data[['T1_treat','T2_treat','T3_treat']]
+    x = sm_api.add_constant(x)
+    result = list()
+    BS = list()
+    BT = list()
+    ST = list()
+    Control_avg = list()
+    for i in ['s_teneviv_int','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_sexo_int','s_yrs','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','s_estrato','s_puntaje','s_ingtotal']:
+        y = data[i]
+        reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': data['school_code']})
+        result.append(round(reg.params, 2))
+        result.append(round(reg.bse, 2))
+        BS.append(round(reg.t_test('T1_treat=T2_treat').effect[0], 2))
+        BS.append(round(reg.t_test('T1_treat=T2_treat').sd[0][0], 2))
+        BT.append(round(reg.t_test('T1_treat=T3_treat').effect[0], 2))
+        BT.append(round(reg.t_test('T1_treat=T3_treat').sd[0][0], 2))
+        ST.append(round(reg.t_test('T2_treat=T3_treat').effect[0], 2))
+        ST.append(round(reg.t_test('T2_treat=T3_treat').sd[0][0], 2))
+        Control_avg.append(float("%.2f" % round(data.groupby(data['control']).mean()[i][1], 2)))
+        Control_avg.append(round(data.groupby(data['control']).std()[i][1], 2))
+    table = pd.DataFrame(result, index=['Possessions','Possessions SE','Utilities','Utilities SE','Durable Goods','Durable Goods SE','Physical Infrastructure','Physical Infrastructure SE','Age','Age SE','Gender','Gender SE','Years of Education','Years of Education SE','Single Head','Single Head SE','Age of Head','Age of Head SE','Years of ed., head','Years of ed., head SE','People in Household','People in Household SE','Member under 18','Member under 18 SE','Estrato','Estrato SE','SISBEN score','SISBEN score SE','Household income (1,000 pesos)','Household income (1,000 pesos) SE'])
+    table.columns = ['Control average', 'Basic-Control', 'Savings-Control', 'Tertiary-Conrol']
+    table['Control average'] = Control_avg
+    table['Basic-Savings'] = BS
+    table['Basic-Tertiary'] = BT
+    table['Savings-Tertiary'] = ST
+    
     return table
+
+def create_table8(data):
+    """
+      Creates Table 8.
+    """    
+    sample_survey = data.drop(data[(data.survey_selected == 0) | (data.grade == 11) | (data.grade < 9)].index)
+    sample_grade = data.drop(data[(data.grade == 11) | (data.grade < 9)].index)
+    sample_grade = sample_grade[sample_grade['m_enrolled'].notna()]
+    results_att = np.array([])
+    results_enr = np.array([])
+    y = sample_survey['at_msamean']
+    x = sample_survey[['T1_treat','T2_treat','T3_treat','suba']]
+    x = sm_api.add_constant(x, has_constant='add')
+    reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_survey['school_code']})
+    results_att = np.append(results_att, round(reg.params[1],3))
+    results_att = np.append(results_att, round(reg.bse[1],3))
+    results_att = np.append(results_att, round(reg.params[2],3))
+    results_att = np.append(results_att, round(reg.bse[2],3))
+    results_att = np.append(results_att, round(reg.params[3],3))
+    results_att = np.append(results_att, round(reg.bse[3],3))
+    results_att = np.append(results_att, round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    results_att = np.append(results_att, round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    results_att = np.append(results_att, round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
+    results_att = np.append(results_att, round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
+    results_att = np.append(results_att, len(y))
+    results_att = np.append(results_att, round(reg.rsquared, 3))
+    y = sample_grade['m_enrolled']
+    x = sample_grade[['T1_treat','T2_treat','T3_treat','suba']]
+    x = sm_api.add_constant(x, has_constant='add')
+    reg = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_grade['school_code']})
+    results_enr = np.append(results_enr, round(reg.params[1],3))
+    results_enr = np.append(results_enr, round(reg.bse[1],3))
+    results_enr = np.append(results_enr, round(reg.params[2],3))
+    results_enr = np.append(results_enr, round(reg.bse[2],3))
+    results_enr = np.append(results_enr, round(reg.params[3],3))
+    results_enr = np.append(results_enr, round(reg.bse[3],3))
+    results_enr = np.append(results_enr, round(reg.f_test('T1_treat=T2_treat').fvalue[0][0], 3))
+    results_enr = np.append(results_enr, round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
+    results_enr = np.append(results_enr, round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
+    results_enr = np.append(results_enr, round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
+    results_enr = np.append(results_enr, int(len(y)))
+    results_enr = np.append(results_enr, round(reg.rsquared, 3))
+    table8 = pd.DataFrame({'Attendence':results_att}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
+    table8['Enrollment'] = results_enr
+    
+    return table8
