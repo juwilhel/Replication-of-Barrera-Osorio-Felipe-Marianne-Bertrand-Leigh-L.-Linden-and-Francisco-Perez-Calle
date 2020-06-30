@@ -137,6 +137,9 @@ def create_table34(data1, data2, data3, variable):
         result_sancristobal2[0].append('')
         result_sancristobal3[0].append('')
         i += 1
+    result_sancristobal1[0].append('')
+    result_sancristobal2[0].append('')
+    result_sancristobal3[0].append('')
     result_sancristobal1[0].append(len(y_sancristobal))
     result_sancristobal2[0].append(len(y_sancristobal))
     result_sancristobal3[0].append(len(y_sancristobal))
@@ -169,6 +172,9 @@ def create_table34(data1, data2, data3, variable):
         result_suba2[0].append('')
         result_suba3[0].append('')
         i += 1
+    result_suba1[0].append('')
+    result_suba2[0].append('')
+    result_suba3[0].append('')
     result_suba1[0].append(len(y_suba))
     result_suba2[0].append(len(y_suba))
     result_suba3[0].append(len(y_suba))
@@ -195,9 +201,10 @@ def create_table34(data1, data2, data3, variable):
     A[3] = -1
     result_both.append(round(reg_both.f_test(A).fvalue[0][0], 3))
     result_both.append(round(float(reg_both.f_test(A).pvalue), 3))
-    result_both.append(int(len(y_both)))
+    result_both.append('')
+    result_both.append(len(y_both))
     result_both.append(round(reg_both.rsquared, 3))
-    table3 = pd.DataFrame({'Basic-Savings': result_sancristobal1[0]}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
+    table3 = pd.DataFrame({'Basic-Savings': result_sancristobal1[0]}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','','Observations','R squared'])
     table3['Basic-Savings with demographics'] = result_sancristobal2[0]
     table3['Basic-Savings with demographics and school fixed effects'] = result_sancristobal3[0]
     table3['Tertiary'] = result_suba1[0]
@@ -242,6 +249,7 @@ def create_table5(data):
     while i < 3:
         result_grad_sancristobal.append('')
         i += 1
+    result_grad_sancristobal.append('')
     result_grad_sancristobal.append(len(y))
     result_grad_sancristobal.append(round(reg.rsquared, 3))
     sample_fu_sancristobal_tert = sample_fu_sancristobal.drop(sample_fu_sancristobal[sample_fu_sancristobal.tertiary.isnull()].index)
@@ -264,6 +272,7 @@ def create_table5(data):
     while i < 3:
         result_tert_sancristobal.append('')
         i += 1
+    result_tert_sancristobal.append('')
     result_tert_sancristobal.append(len(y))
     result_tert_sancristobal.append(round(reg.rsquared, 3))
     x = sm_api.add_constant(sample_fu_suba[['T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
@@ -276,6 +285,7 @@ def create_table5(data):
     while i < 5:
         result_grad_suba.append('')
         i += 1
+    result_grad_suba.append('')    
     result_grad_suba.append(len(y))
     result_grad_suba.append(round(reg.rsquared, 3))
     sample_fu_suba_tert = sample_fu_suba.drop(sample_fu_suba[sample_fu_suba.tertiary.isnull()].index)
@@ -289,6 +299,7 @@ def create_table5(data):
     while i < 5:
         result_tert_suba.append('')
         i += 1
+    result_tert_suba.append('')
     result_tert_suba.append(len(y))
     result_tert_suba.append(round(reg.rsquared, 3))
     x = sm_api.add_constant(sample_fu[['T1_treat','T2_treat','T3_treat','Rent','Own paying it','Own payed','Other condition','s_utilities','s_durables','s_infraest_hh','s_age_sorteo','s_age_sorteo2','s_years_back','s_sexo_int','Free union','Married','Widow(er)','Divorced','Single','s_single','s_edadhead','s_yrshead','s_tpersona','s_num18','estrato_0','estrato_1','estrato_2','s_puntaje','s_ingtotal','grade_6.0','grade_7.0','grade_8.0','grade_9.0','grade_10.0','grade_11.0','suba','s_over_age']], has_constant='add')
@@ -307,6 +318,7 @@ def create_table5(data):
     A = np.array(([0,1,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
     result_grad_both.append(round(reg.f_test(A).fvalue[0][0], 3))
     result_grad_both.append(round(float(reg.f_test(A).pvalue), 3))
+    result_grad_both.append('')
     result_grad_both.append(len(y))
     result_grad_both.append(round(reg.rsquared, 3))
     sample_fu_tert = sample_fu.drop(sample_fu[sample_fu.tertiary.isnull()].index)
@@ -326,9 +338,10 @@ def create_table5(data):
     A = np.array(([0,1,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
     result_tert_both.append(round(reg.f_test(A).fvalue[0][0], 3))
     result_tert_both.append(round(float(reg.f_test(A).pvalue), 3))
+    result_tert_both.append('')
     result_tert_both.append(len(y))
     result_tert_both.append(round(reg.rsquared, 3))
-    table5 = pd.DataFrame({'Graduation Basic-Savings':result_grad_sancristobal}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
+    table5 = pd.DataFrame({'Graduation Basic-Savings':result_grad_sancristobal}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','','Observations','R squared'])
     table5['Graduation Tertiary'] = result_grad_suba
     table5['Graduation Both'] = result_grad_both
     table5['Tertiary enrollment Basic-Savings'] = result_tert_sancristobal
@@ -378,6 +391,7 @@ def create_table6(data):
     reg1 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated['school_code']})
     att.append(round(reg1.params[[1]][0], 3))
     att.append(round(reg1.bse[[1]][0], 3))
+    att.append('')
     att.append(int(reg1.nobs))
     att.append(round(reg1.rsquared, 3))
     sample_sib_untreated = sample_sib_untreated.drop(sample_sib_untreated[sample_sib_untreated.m_enrolled.isna()].index)
@@ -388,6 +402,7 @@ def create_table6(data):
     reg2 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated['school_code']})
     enr.append(round(reg2.params[[1]][0], 3))
     enr.append(round(reg2.bse[[1]][0], 3))
+    enr.append('')
     enr.append(int(reg2.nobs))
     enr.append(round(reg2.rsquared, 3))
     y = sample_sib_untreated_f['at_msamean']
@@ -397,6 +412,7 @@ def create_table6(data):
     reg3 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_f['school_code']})
     att_f.append(round(reg3.params[[1]][0], 3))
     att_f.append(round(reg3.bse[[1]][0], 3))
+    att_f.append('')
     att_f.append(int(reg3.nobs))
     att_f.append(round(reg3.rsquared, 3))
     sample_sib_untreated_f = sample_sib_untreated_f.drop(sample_sib_untreated_f[sample_sib_untreated_f.m_enrolled.isna()].index)
@@ -407,6 +423,7 @@ def create_table6(data):
     reg4 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_f['school_code']})
     enr_f.append(round(reg4.params[[1]][0], 3))
     enr_f.append(round(reg4.bse[[1]][0], 3))
+    enr_f.append('')
     enr_f.append(int(reg4.nobs))
     enr_f.append(round(reg4.rsquared, 3))
     y = sample_sib_untreated_m['at_msamean']
@@ -416,6 +433,7 @@ def create_table6(data):
     reg5 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_m['school_code']})
     att_m.append(round(reg5.params[[1]][0], 3))
     att_m.append(round(reg5.bse[[1]][0], 3))
+    att_m.append('')
     att_m.append(int(reg5.nobs))
     att_m.append(round(reg5.rsquared, 3))
     sample_sib_untreated_m = sample_sib_untreated_m.drop(sample_sib_untreated_m[sample_sib_untreated_m.m_enrolled.isna()].index)
@@ -426,9 +444,10 @@ def create_table6(data):
     reg6 = sm_api.OLS(y, x).fit(cov_type='cluster', cov_kwds={'groups': sample_sib_untreated_m['school_code']})
     enr_m.append(round(reg6.params[[1]][0], 3))
     enr_m.append(round(reg6.bse[[1]][0], 3))
+    enr_m.append('')
     enr_m.append(int(reg6.nobs))
     enr_m.append(round(reg6.rsquared, 3))
-    table6 = pd.DataFrame({'Attendence': att}, index=['Sibling is treated?','Sibling is treated? SE','Observations','R squared'])
+    table6 = pd.DataFrame({'Attendence': att}, index=['Sibling is treated?','Sibling is treated? SE','','Observations','R squared'])
     table6['Enrollment'] = enr
     table6['Attendence Female'] = att_f
     table6['Enrollment Female'] = enr_f
@@ -494,6 +513,7 @@ def create_table8(data):
     results_att = np.append(results_att, round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
     results_att = np.append(results_att, round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
     results_att = np.append(results_att, round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
+    results_att = np.append(results_att, '')
     results_att = np.append(results_att, len(y))
     results_att = np.append(results_att, round(reg.rsquared, 3))
     y = sample_grade['m_enrolled']
@@ -510,9 +530,10 @@ def create_table8(data):
     results_enr = np.append(results_enr, round(float(reg.f_test('T1_treat=T2_treat').pvalue), 3))
     results_enr = np.append(results_enr, round(reg.f_test('T1_treat=T3_treat').fvalue[0][0], 3))
     results_enr = np.append(results_enr, round(float(reg.f_test('T1_treat=T3_treat').pvalue), 3))
-    results_enr = np.append(results_enr, int(len(y)))
+    results_enr = np.append(results_enr, '')
+    results_enr = np.append(results_enr, len(y))
     results_enr = np.append(results_enr, round(reg.rsquared, 3))
-    table8 = pd.DataFrame({'Attendence':results_att}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','Observations','R squared'])
+    table8 = pd.DataFrame({'Attendence':results_att}, index=['Basic treatment','Basic treatment SE','Savings treatment','Savings treatment SE','Tertiary treatment','Tertiary treatment SE','H0: Basic-Savings F-Stat','p-value','H0: Tertiary-Basic F-Stat','p-value','','Observations','R squared'])
     table8['Enrollment'] = results_enr
     
     return table8
