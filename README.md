@@ -6,13 +6,13 @@ This repository contains my replication of
 
 The following badges allow to easily access the project notebook.
 
-<a href="https://nbviewer.jupyter.org/github/HumanCapitalAnalysis/microeconometrics-course-project-juwilhel/blob/master/Project.ipynb"
+<a href="https://nbviewer.jupyter.org/github/HumanCapitalAnalysis/microeconometrics-course-project-juwilhel/blob/master/replication-notebook.ipynb"
    target="_parent">
    <img align="center"
   src="https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.png"
       width="109" height="20">
 </a>
-<a href="https://mybinder.org/v2/gh/HumanCapitalAnalysis/microeconometrics-course-project-juwilhel/master?filepath=Project.ipynb"
+<a href="https://mybinder.org/v2/gh/HumanCapitalAnalysis/microeconometrics-course-project-juwilhel/master?filepath=replication-notebook.ipynb"
     target="_parent">
     <img align="center"
        src="https://mybinder.org/badge_logo.svg"
