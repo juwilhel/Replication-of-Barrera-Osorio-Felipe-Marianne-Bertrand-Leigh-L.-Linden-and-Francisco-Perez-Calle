@@ -21,9 +21,9 @@ The following badges allow to easily access the project notebook.
 
 ## Replication of Barrera-Osorio, Felipe, Marianne Bertrand, Leigh L. Linden, and Francisco Perez-Calle (2011)
 
-Barrera-Osorio et al.(2011) examine the effects of three different education-based conditional cash transfer programs on academic participation. They use data from a pilot study in Bogota, Colombia and analyse whether the different designs of the programs have different effects. The authors find that all designs significantly increase school attendance and that treatments with a lump-sum payment at the time where students have to re-enroll to school or when they graduate, increase enrollment rates more strongly than treatment consisting only of a bi-monthly transfer. They conclude that the structure of the intervention can help targeting resources. 
+Barrera-Osorio et al. (2011) examine the effects of three different education-based conditional cash transfer programs on academic participation. They use data from a pilot study in Bogota, Colombia and analyse whether the different designs of the programs have different effects. The authors find that all designs significantly increase school attendance and that treatments with a lump-sum payment at the time where students have to re-enroll to school or when they graduate, increase enrollment rates more strongly than treatment consisting only of a bi-monthly transfer. They conclude that the structure of the intervention can help targeting resources. 
 
-The main part of this project is my replication of the results from Barrera_osorio et al. (2011). I illustrate their identification strategy using causal graphs, briefly discuss the empirical strategy the authors use for estimation and a critical discuss their results. In addition to the replication, I provide extensions implementing robustness checks for nthe findings presented in the paper. 
+The main part of this project is my replication of the results from Barrera Osorio et al. (2011). I illustrate their identification strategy using causal graphs, briefly discuss the empirical strategy the authors use for estimation and a critically discuss their results. In addition to the replication, I provide extensions implementing robustness checks for the findings presented in the paper. 
 
 ## This Repository
 
