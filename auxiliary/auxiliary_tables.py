@@ -2,10 +2,8 @@
 
 import json
 
-import matplotlib as plt
 import pandas as pd
 import numpy as np
-import statsmodels as sm
 import statsmodels.api as sm_api
 
 
